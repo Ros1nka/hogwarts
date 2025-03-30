@@ -5,6 +5,7 @@ import pro.sky.hogwarts.model.Students;
 import java.util.Collection;
 
 public interface StudentService {
+
     Students createStudent(Students students);
 
     Students editStudent(Students students);
