@@ -12,7 +12,7 @@ public class StudentServiceImpl implements StudentService {
 
     StudentRepository studentRepository;
 
-    public StudentServiceImpl(StudentRepository studentRepository){
+    public StudentServiceImpl(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
 
@@ -29,7 +29,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Students getStudentById(Long id) {
-        return studentRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("По id студент не найден"));
+        return studentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Student with this ID not found"));
     }
 
     @Override
