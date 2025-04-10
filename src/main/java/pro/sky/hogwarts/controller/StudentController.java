@@ -49,4 +49,10 @@ public class StudentController {
         studentService.deleteStudentById(id);
         return ResponseEntity.ok("Student is deleted");
     }
+
+    @GetMapping("/findByAgeBetween/{from}/{to}")
+    public ResponseEntity<Collection<Students>> getAgeBetween(@PathVariable int from, @PathVariable int to) {
+                return ResponseEntity.ok(studentService.findByAgeBetween(from, to));
+    }
+
 }
