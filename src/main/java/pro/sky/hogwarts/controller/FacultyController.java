@@ -1,5 +1,6 @@
 package pro.sky.hogwarts.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.hogwarts.model.Faculty;
@@ -18,27 +19,33 @@ public class FacultyController {
     }
 
     @PostMapping
-    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
-        return ResponseEntity.ok(facultyService.createFaculty(faculty));
+    public ResponseEntity<Faculty>  createFaculty(@RequestBody Faculty faculty) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(facultyService.createFaculty(faculty));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Faculty> updateFaculty(@RequestBody Faculty faculty) {
-        return ResponseEntity.ok( facultyService.updateFaculty(faculty));
+    @PutMapping
+    public ResponseEntity<Faculty> editFaculty(@RequestBody Faculty faculty) {
+        return ResponseEntity.ok(facultyService.editFaculty(faculty));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Faculty> getFaculty(@PathVariable Long id) {
-        return ResponseEntity.ok( facultyService.getFaculty(id));
+    public ResponseEntity<Faculty> findFacultyById(@PathVariable Long id) {
+        return ResponseEntity.ok(facultyService.getFacultyById(id));
     }
 
     @GetMapping
-    public ResponseEntity< Collection <Faculty>> getAllFaculties() {
-        return ResponseEntity.ok( facultyService.getAllFaculties());
+    public ResponseEntity<Collection<Faculty>> findAllFaculty() {
+        return ResponseEntity.ok(facultyService.getAllFaculties());
     }
+
+    @GetMapping("/color/{color}")
+    public ResponseEntity<Faculty> findFacultyByColor(@PathVariable String color) {
+        return ResponseEntity.ok(facultyService.getFacultyByColor(color));
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Faculty> deleteFaculty(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
         facultyService.deleteFaculty(id);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok().build();
     }
 }

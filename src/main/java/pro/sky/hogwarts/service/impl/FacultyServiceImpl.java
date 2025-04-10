@@ -22,18 +22,23 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public Faculty updateFaculty(Faculty faculty) {
+    public Faculty editFaculty(Faculty faculty) {
         return facultyRepository.save(faculty);
-    }
-
-    @Override
-    public Faculty getFaculty(Long id) {
-        return facultyRepository.findById(id).orElse(null);
     }
 
     @Override
     public Collection<Faculty> getAllFaculties() {
         return facultyRepository.findAll();
+    }
+
+    @Override
+    public Faculty getFacultyById(Long id) {
+        return facultyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Факультет не найден"));
+    }
+
+    @Override
+    public Faculty getFacultyByColor(String color) {
+        return facultyRepository.findByColor(color);
     }
 
     @Override

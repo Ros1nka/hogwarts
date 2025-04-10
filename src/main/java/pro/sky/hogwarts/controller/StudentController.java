@@ -18,7 +18,18 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @GetMapping("/{id}")
+    @PostMapping
+    public ResponseEntity<Students> createStudent(@RequestBody Students students) {
+        Students createdStudents = studentService.createStudent(students);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdStudents);
+    }
+
+    @PutMapping()
+    public ResponseEntity<Students> editStudent(@RequestBody Students students) {
+        return ResponseEntity.ok(studentService.editStudent(students));
+    }
+
+    @GetMapping("{id}")
     public ResponseEntity<Students> getStudent(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getStudentById(id));
     }
@@ -28,25 +39,20 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 
-    @PostMapping
-    public ResponseEntity<Students> createStudent(@RequestBody Students students) {
-        Students createdStudents = studentService.createStudent(students);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdStudents);
+    @GetMapping("/findByAge/{age}")
+    public ResponseEntity<Collection<Students>> findByAge(@PathVariable int age) {
+        return ResponseEntity.ok(studentService.findByAge(age));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
         studentService.deleteStudentById(id);
         return ResponseEntity.ok("Student is deleted");
     }
 
-    @PutMapping("/edit")
-    public ResponseEntity<Students> editStudent(@PathVariable Students students) {
-        return ResponseEntity.ok(studentService.editStudent(students));
+    @GetMapping("/findByAgeBetween/{from}/{to}")
+    public ResponseEntity<Collection<Students>> getAgeBetween(@PathVariable int from, @PathVariable int to) {
+                return ResponseEntity.ok(studentService.findByAgeBetween(from, to));
     }
 
-    @GetMapping("/findByAge/{age}")
-    public ResponseEntity<Collection<Students>> findByAge(@PathVariable int age) {
-        return ResponseEntity.ok(studentService.findByAge(age));
-    }
 }
