@@ -3,7 +3,9 @@ package pro.sky.hogwarts.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import pro.sky.hogwarts.model.Faculty;
+
 import pro.sky.hogwarts.model.Students;
 import pro.sky.hogwarts.service.StudentService;
 

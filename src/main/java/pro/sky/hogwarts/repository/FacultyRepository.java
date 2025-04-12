@@ -2,6 +2,7 @@ package pro.sky.hogwarts.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import pro.sky.hogwarts.model.Faculty;
+
 import pro.sky.hogwarts.model.Students;
 
 import java.util.Collection;
