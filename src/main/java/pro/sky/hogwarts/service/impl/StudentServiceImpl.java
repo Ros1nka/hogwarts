@@ -1,6 +1,7 @@
 package pro.sky.hogwarts.service.impl;
 
 import org.springframework.stereotype.Service;
+import pro.sky.hogwarts.model.Faculty;
 import pro.sky.hogwarts.model.Students;
 import pro.sky.hogwarts.repository.StudentRepository;
 import pro.sky.hogwarts.service.StudentService;
@@ -23,8 +24,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Students editStudent(Students students) {
-        studentRepository.save(students);
-        return students;
+        return studentRepository.save(students);
     }
 
     @Override
@@ -48,7 +48,28 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Collection<Students> findByAgeBetween(int from, int to){
-        studentRepository.findAllByAgeBetween(from, to);
+    public Collection<Students> findByAgeBetween(Integer minAge, Integer maxAge) {
+        if (minAge == null) {
+            minAge = 0;
+        }
+        if (maxAge == null) {
+            maxAge = Integer.MAX_VALUE;
+        }
+        if (minAge > maxAge) {
+            int temp = minAge;
+            minAge = maxAge;
+            maxAge = temp;
+        }
+        return studentRepository.findAllByAgeBetween(minAge, maxAge);
+    }
+
+    @Override
+    public Faculty getFaculty(Long id) {
+        return getStudentById(id).getFaculty();
+    }
+
+    @Override
+    public Collection<Students> getStudentsByFacultyId(Long id) {
+        return studentRepository.findAllByFacultyId(id);
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.hogwarts.model.Faculty;
+import pro.sky.hogwarts.model.Students;
 import pro.sky.hogwarts.service.FacultyService;
 
 import java.util.Collection;
@@ -19,7 +20,7 @@ public class FacultyController {
     }
 
     @PostMapping
-    public ResponseEntity<Faculty>  createFaculty(@RequestBody Faculty faculty) {
+    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
         return ResponseEntity.status(HttpStatus.CREATED).body(facultyService.createFaculty(faculty));
     }
 
@@ -38,14 +39,14 @@ public class FacultyController {
         return ResponseEntity.ok(facultyService.getAllFaculties());
     }
 
-    @GetMapping("/color/{color}")
-    public ResponseEntity<Faculty> findFacultyByColor(@PathVariable String color) {
-        return ResponseEntity.ok(facultyService.getFacultyByColor(color));
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
         facultyService.deleteFaculty(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/find/{strSearch}")
+    public ResponseEntity<Collection<Faculty>> findFaculty(@PathVariable String strSearch) {
+        return ResponseEntity.ok(facultyService.findFaculty(strSearch));
     }
 }
