@@ -1,5 +1,6 @@
 package pro.sky.hogwarts.service;
 
+import pro.sky.hogwarts.model.Faculty;
 import pro.sky.hogwarts.model.Students;
 
 import java.util.Collection;
@@ -18,5 +19,9 @@ public interface StudentService {
 
     Collection<Students> findByAge(int age);
 
-    Collection<Students> findByAgeBetween(int from, int to);
+    Collection<Students> findByAgeBetween(Integer minAge, Integer maxAge);
+
+    Faculty getFaculty(Long id);
+
+    Collection<Students> getStudentsByFacultyId(Long id);
 }
