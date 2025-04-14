@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.hogwarts.model.Faculty;
+import pro.sky.hogwarts.model.Students;
 import pro.sky.hogwarts.service.FacultyService;
 
 import java.util.Collection;
@@ -12,7 +13,7 @@ import java.util.Collection;
 @RequestMapping("/faculty")
 public class FacultyController {
 
-    FacultyService facultyService;
+    private final FacultyService facultyService;
 
     public FacultyController(FacultyService facultyService) {
         this.facultyService = facultyService;
@@ -20,7 +21,8 @@ public class FacultyController {
 
     @PostMapping
     public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(facultyService.createFaculty(faculty));
+        Faculty createtedFaculty = facultyService.createFaculty(faculty);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createtedFaculty);
     }
 
     @PutMapping
@@ -47,5 +49,15 @@ public class FacultyController {
     @GetMapping("/find/{strSearch}")
     public ResponseEntity<Collection<Faculty>> findFaculty(@PathVariable String strSearch) {
         return ResponseEntity.ok(facultyService.findFaculty(strSearch));
+    }
+
+    @GetMapping("/get-faculty/{id}")
+    public ResponseEntity<Faculty> getFacultyByStudentId(@PathVariable Long id) {
+        return ResponseEntity.ok(facultyService.getFacultyByStudentId(id));
+    }
+
+    @GetMapping("/get-students/{id}")
+    public ResponseEntity<Collection<Students>> getStudentsByFacultyId(@PathVariable Long id) {
+        return ResponseEntity.ok(facultyService.getStudentsByFacultyId(id));
     }
 }
