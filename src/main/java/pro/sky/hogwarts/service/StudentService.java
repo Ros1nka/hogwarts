@@ -1,10 +1,13 @@
 package pro.sky.hogwarts.service;
 
+import pro.sky.hogwarts.model.Faculty;
+
 import pro.sky.hogwarts.model.Students;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface StudentService {
+
     Students createStudent(Students students);
 
     Students editStudent(Students students);
@@ -13,7 +16,11 @@ public interface StudentService {
 
     void deleteStudentById(Long id);
 
-    Collection<Students> getAllStudents();
+    List<Students> getAllStudents();
 
-    Collection<Students> findByAge(int age);
+    List<Students> findByAge(int age);
+
+    List<Students> findByAgeBetween(Integer minAge, Integer maxAge);
+
+    Faculty getFacultyByStudentId(Long id);
 }

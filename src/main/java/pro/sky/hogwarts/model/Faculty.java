@@ -4,6 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
+import jakarta.persistence.OneToMany;
+
+import java.util.Collection;
+
 import java.util.Objects;
 
 @Entity
@@ -14,6 +18,10 @@ public class Faculty {
     private Long id;
     private String name;
     private String color;
+
+
+    @OneToMany(mappedBy = "faculty")
+    private Collection<Students> students;
 
     public Long getId() {
         return id;
