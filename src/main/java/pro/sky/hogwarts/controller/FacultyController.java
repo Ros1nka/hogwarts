@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.*;
 import pro.sky.hogwarts.model.Faculty;
 import pro.sky.hogwarts.service.FacultyService;
 
-import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/faculty")
 public class FacultyController {
 
-    FacultyService facultyService;
+    private final FacultyService facultyService;
 
     public FacultyController(FacultyService facultyService) {
         this.facultyService = facultyService;
@@ -20,7 +20,8 @@ public class FacultyController {
 
     @PostMapping
     public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(facultyService.createFaculty(faculty));
+        Faculty createtedFaculty = facultyService.createFaculty(faculty);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createtedFaculty);
     }
 
     @PutMapping
@@ -34,7 +35,7 @@ public class FacultyController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Faculty>> findAllFaculty() {
+    public ResponseEntity<List<Faculty>> findAllFaculty() {
         return ResponseEntity.ok(facultyService.getAllFaculties());
     }
 
@@ -45,7 +46,12 @@ public class FacultyController {
     }
 
     @GetMapping("/find/{strSearch}")
-    public ResponseEntity<Collection<Faculty>> findFaculty(@PathVariable String strSearch) {
+    public ResponseEntity<List<Faculty>> findFaculty(@PathVariable String strSearch) {
         return ResponseEntity.ok(facultyService.findFaculty(strSearch));
+    }
+
+    @GetMapping("/get-students/{id}")
+    public ResponseEntity<List<Students>> getStudentsByFacultyId(@PathVariable Long id) {
+        return ResponseEntity.ok(facultyService.getStudentsByFacultyId(id));
     }
 }

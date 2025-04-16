@@ -1,12 +1,13 @@
 package pro.sky.hogwarts.service.impl;
 
 import org.springframework.stereotype.Service;
+import pro.sky.hogwarts.Exception.StudentNotFoundException;
 import pro.sky.hogwarts.model.Faculty;
 import pro.sky.hogwarts.model.Students;
 import pro.sky.hogwarts.repository.StudentRepository;
 import pro.sky.hogwarts.service.StudentService;
 
-import java.util.Collection;
+import java.util.List;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -29,26 +30,29 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Students getStudentById(Long id) {
-        return studentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Student with this ID not found"));
+        return studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException("Student with id: " + id + "not found"));
     }
 
     @Override
     public void deleteStudentById(Long id) {
+        if (!studentRepository.existsById(id)) {
+            throw new StudentNotFoundException("Student with id: " + id + "not found");
+        }
         studentRepository.deleteById(id);
     }
 
     @Override
-    public Collection<Students> getAllStudents() {
+    public List<Students> getAllStudents() {
         return studentRepository.findAll();
     }
 
     @Override
-    public Collection<Students> findByAge(int age) {
+    public List<Students> findByAge(int age) {
         return studentRepository.findAllByAge(age);
     }
 
     @Override
-    public Collection<Students> findByAgeBetween(Integer minAge, Integer maxAge) {
+    public List<Students> findByAgeBetween(Integer minAge, Integer maxAge) {
         if (minAge == null) {
             minAge = 0;
         }
@@ -64,12 +68,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Faculty getFaculty(Long id) {
+    public Faculty getFacultyByStudentId(Long id) {
+        Students student = getStudentById(id);
+        if (student.getFaculty() == null) {
+            throw new StudentNotFoundException("Student with id: " + id + " does not have a faculty");
+        }
         return getStudentById(id).getFaculty();
     }
 
-    @Override
-    public Collection<Students> getStudentsByFacultyId(Long id) {
-        return studentRepository.findAllByFacultyId(id);
-    }
 }

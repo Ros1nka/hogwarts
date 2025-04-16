@@ -4,19 +4,21 @@ import pro.sky.hogwarts.model.Faculty;
 
 import pro.sky.hogwarts.model.Students;
 
-
-import java.util.Collection;
+import java.util.List;
 
 public interface FacultyService {
+
     Faculty createFaculty(Faculty faculty);
 
     Faculty editFaculty(Faculty faculty);
 
-    Collection<Faculty> getAllFaculties();
+    List<Faculty> getAllFaculties();
 
     Faculty getFacultyById(Long id);
 
-    Collection<Faculty> findFaculty(String strSearch);
+    List<Faculty> findFaculty(String strSearch);
 
     void deleteFaculty(Long id);
+
+    List<Students> getStudentsByFacultyId(Long id);
 }
