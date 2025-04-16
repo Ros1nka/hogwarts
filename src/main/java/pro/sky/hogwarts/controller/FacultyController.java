@@ -7,7 +7,7 @@ import pro.sky.hogwarts.model.Faculty;
 import pro.sky.hogwarts.model.Students;
 import pro.sky.hogwarts.service.FacultyService;
 
-import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/faculty")
@@ -36,7 +36,7 @@ public class FacultyController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Faculty>> findAllFaculty() {
+    public ResponseEntity<List<Faculty>> findAllFaculty() {
         return ResponseEntity.ok(facultyService.getAllFaculties());
     }
 
@@ -47,17 +47,12 @@ public class FacultyController {
     }
 
     @GetMapping("/find/{strSearch}")
-    public ResponseEntity<Collection<Faculty>> findFaculty(@PathVariable String strSearch) {
+    public ResponseEntity<List<Faculty>> findFaculty(@PathVariable String strSearch) {
         return ResponseEntity.ok(facultyService.findFaculty(strSearch));
     }
 
-    @GetMapping("/get-faculty/{id}")
-    public ResponseEntity<Faculty> getFacultyByStudentId(@PathVariable Long id) {
-        return ResponseEntity.ok(facultyService.getFacultyByStudentId(id));
-    }
-
     @GetMapping("/get-students/{id}")
-    public ResponseEntity<Collection<Students>> getStudentsByFacultyId(@PathVariable Long id) {
+    public ResponseEntity<List<Students>> getStudentsByFacultyId(@PathVariable Long id) {
         return ResponseEntity.ok(facultyService.getStudentsByFacultyId(id));
     }
 }

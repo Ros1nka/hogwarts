@@ -7,7 +7,7 @@ import pro.sky.hogwarts.model.Faculty;
 import pro.sky.hogwarts.model.Students;
 import pro.sky.hogwarts.service.StudentService;
 
-import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/students")
@@ -40,12 +40,12 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Students>> getAllStudents() {
+    public ResponseEntity<List<Students>> getAllStudents() {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 
-    @GetMapping("/findByAge/{age}")
-    public ResponseEntity<Collection<Students>> findByAge(@PathVariable int age) {
+    @GetMapping("/ByAge/{age}")
+    public ResponseEntity<List<Students>> findByAge(@PathVariable int age) {
         return ResponseEntity.ok(studentService.findByAge(age));
     }
 
@@ -55,11 +55,15 @@ public class StudentController {
         return ResponseEntity.ok("Student is deleted");
     }
 
-    @GetMapping("/by-age")
-    public ResponseEntity<Collection<Students>> getAgeBetween(
+    @GetMapping("/byAgeBetween")
+    public ResponseEntity<List<Students>> getAgeBetween(
             @RequestParam(required = false) Integer minAge,
             @RequestParam(required = false) Integer maxAge) {
         return ResponseEntity.ok(studentService.findByAgeBetween(minAge, maxAge));
     }
 
+    @GetMapping("/get-faculty/{id}")
+    public ResponseEntity<Faculty> getFacultyByStudentId(@PathVariable Long id) {
+        return ResponseEntity.ok(studentService.getFacultyByStudentId(id));
+    }
 }
