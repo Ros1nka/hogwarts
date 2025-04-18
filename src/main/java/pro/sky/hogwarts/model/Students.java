@@ -1,5 +1,6 @@
 package pro.sky.hogwarts.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -15,6 +16,7 @@ public class Students {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "faculty_id")
+    @JsonIgnore
     private Faculty faculty;
 
     public Faculty getFaculty() {
