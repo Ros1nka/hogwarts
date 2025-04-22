@@ -9,18 +9,30 @@ import java.util.Objects;
 public class Avatar {
 
     @Id
-    @GeneratedValue
-    Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    String filePath;
-    long fileSize;
-    String mediaType;
+    private String filePath;
+    private long fileSize;
+    private String mediaType;
 
     @Lob
-    byte[] data;
+    private byte[] data;
 
     @OneToOne
-    Students student;
+    private Students student;
+
+    public Avatar() {
+    }
+
+    public Avatar(Long id, String filePath, long fileSize, String mediaType, byte[] data, Students student) {
+        this.id = id;
+        this.filePath = filePath;
+        this.fileSize = fileSize;
+        this.mediaType = mediaType;
+        this.data = data;
+        this.student = student;
+    }
 
     public Long getId() {
         return id;
