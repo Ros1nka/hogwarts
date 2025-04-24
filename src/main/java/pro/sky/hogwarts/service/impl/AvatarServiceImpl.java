@@ -1,5 +1,6 @@
 package pro.sky.hogwarts.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,7 @@ import java.nio.file.Path;
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
+@Transactional
 public class AvatarServiceImpl implements AvatarService {
 
     @Value("${path.to.avatars.folder}")
@@ -32,7 +34,7 @@ public class AvatarServiceImpl implements AvatarService {
     }
 
     public void uploadAvatar(Long studentId, MultipartFile avatarFile) throws IOException {
-        Students student = studentRepository.findById(studentId).orElseThrow(() -> new IllegalArgumentException("Студент не найден"));
+        Students student = studentRepository.getById(studentId);
         Path filePath = Path.of(avatarsDir, student.getId() + "." + getExtensions(avatarFile.getOriginalFilename()));
 
         Files.createDirectories(filePath.getParent());

@@ -4,7 +4,6 @@ import org.springframework.web.multipart.MultipartFile;
 import pro.sky.hogwarts.model.Avatar;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public interface AvatarService {
 
