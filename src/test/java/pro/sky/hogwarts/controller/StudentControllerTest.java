@@ -20,15 +20,25 @@ class StudentControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private String baseUrl;
+    
+    @BeforeEach
+    public void setUp() {
+        baseUrl = "http://localhost:" + port + "/students";
+    }
+
     @Test
-    void testCreateStudent() {
+    void testCreateStudent() throw Exception {
         Students student = new Students();
         student.setAge(123);
-        student.setName("Harry Potter");
+        student.setName("Test Test");
 
-        Assertions
-                .assertThat(this.restTemplate.postForObject("http://localhost:" + port + "/students", student, String.class))
-                .isNotNull();
+        ResponseEntity<Students> response = restTemplate.postForObject(baseUrl, student, String);
+
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals("Test Test", response.getBody().getName());
+        assertEquals(123, response.getBody().getAge());
     }
 
     @Test
