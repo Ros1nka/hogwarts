@@ -4,23 +4,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.hogwarts.model.Faculty;
+import pro.sky.hogwarts.model.Students;
 import pro.sky.hogwarts.service.FacultyService;
 
-import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/faculty")
 public class FacultyController {
 
-    FacultyService facultyService;
+    private final FacultyService facultyService;
 
     public FacultyController(FacultyService facultyService) {
         this.facultyService = facultyService;
     }
 
     @PostMapping
-    public ResponseEntity<Faculty>  createFaculty(@RequestBody Faculty faculty) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(facultyService.createFaculty(faculty));
+    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
+        Faculty createtedFaculty = facultyService.createFaculty(faculty);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createtedFaculty);
     }
 
     @PutMapping
@@ -34,18 +36,23 @@ public class FacultyController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Faculty>> findAllFaculty() {
+    public ResponseEntity<List<Faculty>> findAllFaculty() {
         return ResponseEntity.ok(facultyService.getAllFaculties());
-    }
-
-    @GetMapping("/color/{color}")
-    public ResponseEntity<Faculty> findFacultyByColor(@PathVariable String color) {
-        return ResponseEntity.ok(facultyService.getFacultyByColor(color));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
         facultyService.deleteFaculty(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/find/{strSearch}")
+    public ResponseEntity<List<Faculty>> findFaculty(@PathVariable String strSearch) {
+        return ResponseEntity.ok(facultyService.findFaculty(strSearch));
+    }
+
+    @GetMapping("/get-students/{id}")
+    public ResponseEntity<List<Students>> getStudentsByFacultyId(@PathVariable Long id) {
+        return ResponseEntity.ok(facultyService.getStudentsByFacultyId(id));
     }
 }
