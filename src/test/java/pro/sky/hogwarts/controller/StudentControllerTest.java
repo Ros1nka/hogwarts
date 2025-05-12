@@ -1,7 +1,6 @@
 package pro.sky.hogwarts.controller;
 
 import org.assertj.core.api.Assertions;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +11,14 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import pro.sky.hogwarts.model.Faculty;
 import pro.sky.hogwarts.model.Students;
 import pro.sky.hogwarts.repository.StudentRepository;
+import pro.sky.hogwarts.service.FacultyService;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class StudentControllerTest {
@@ -29,6 +31,9 @@ class StudentControllerTest {
 
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    private FacultyService facultyService;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -62,17 +67,17 @@ class StudentControllerTest {
         Assertions
                 .assertThat(HttpStatus.CREATED)
                 .isEqualTo(response.getStatusCode());
-
         Assertions
                 .assertThat("Test Student")
                 .isEqualTo(response.getBody().getName());
         Assertions
                 .assertThat(123)
                 .isEqualTo(response.getBody().getAge());
-
         Assertions
                 .assertThat(response.getBody().getId())
                 .isNotNull();
+
+        studentController.deleteStudent(student.getId());
     }
 
     @Test
@@ -99,11 +104,12 @@ class StudentControllerTest {
         Assertions
                 .assertThat(response.getBody())
                 .isNotNull();
-
         Assertions
                 .assertThat(response.getBody())
                 .extracting("id", "name", "age")
                 .containsExactly(savedStudent.getId(), "Edited Student", 321);
+
+        studentController.deleteStudent(savedStudent.getId());
     }
 
     @Test
@@ -128,6 +134,8 @@ class StudentControllerTest {
                 .assertThat(response.getBody())
                 .extracting("id", "name", "age")
                 .containsExactly(savedStudent.getId(), "Test Student", 123);
+
+        studentController.deleteStudent(savedStudent.getId());
     }
 
     @Test
@@ -139,11 +147,12 @@ class StudentControllerTest {
 
         Students student2 = new Students();
         student2.setAge(321);
-        student2.setName("Test2 Student2");
+        student2.setName("Test2 Student");
 
         studentRepository.saveAll(List.of(student1, student2));
 
-        ResponseEntity<List> response = restTemplate.getForEntity(baseUrl, List.class);
+        ResponseEntity<List> response = restTemplate.getForEntity(
+                baseUrl, List.class);
 
         Assertions
                 .assertThat(response.getStatusCode())
@@ -152,20 +161,116 @@ class StudentControllerTest {
                 .assertThat(response.getBody())
                 .isNotNull();
         Assertions
-                .assertThat(response.getBody().size() >= 2).isTrue();
+                .assertThat(response.getBody()
+                        .size() >= 2).isTrue();
+
+        studentController.deleteStudent(student1.getId());
+        studentController.deleteStudent(student2.getId());
     }
 
     @Test
-    void shouldReturnStudentsWithGivenAge() {
+    void shouldReturnStudentsByAge() {
 
         Students student = new Students();
         student.setAge(123);
         student.setName("Test Student");
         Students savedStudent = studentRepository.save(student);
 
-        ResponseEntity<List> response = restTemplate.getForEntity(
+        ResponseEntity<Students[]> response = restTemplate.getForEntity(
                 baseUrl + "/ByAge/" + savedStudent.getAge(),
-                List.class);
+                Students[].class);
+
+        Assertions
+                .assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+        List<Students> students = Arrays.asList(response.getBody());
+
+        Assertions
+                .assertThat(students)
+                .isNotEmpty();
+        Assertions
+                .assertThat(students)
+                .anyMatch(s -> "Test Student".equals(s.getName()) && s.getAge() == 123);
+
+        studentController.deleteStudent(savedStudent.getId());
+    }
+
+    @Test
+    void shouldDeleteStudent() {
+
+        Students student = new Students();
+        student.setAge(123);
+        student.setName("Test Student");
+        Students savedStudent = studentRepository.save(student);
+
+        Long id = savedStudent.getId();
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                baseUrl + "/" + id,
+                HttpMethod.DELETE,
+                null,
+                String.class);
+
+        Assertions
+                .assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+        Assertions
+                .assertThat(response.getBody())
+                .contains("Student is deleted");
+
+        Optional<Students> studentOptional = studentRepository.findById(id);
+        Assertions
+                .assertThat(studentOptional)
+                .isEmpty();
+    }
+
+    @Test
+    void shouldReturnStudentsByAgeBetween() {
+        Students student1 = new Students();
+        student1.setAge(123);
+        student1.setName("Test Student1");
+        studentRepository.save(student1);
+
+        Students student2 = new Students();
+        student2.setAge(99);
+        student2.setName("Test Student2");
+        studentRepository.save(student2);
+
+        int minAge = 100;
+        int maxAge = 200;
+
+        ResponseEntity<Students[]> response = restTemplate.getForEntity(
+                baseUrl + "/byAgeBetween?minAge=" + minAge + "&maxAge=" + maxAge, Students[].class);
+
+        List<Students> students = List.of(response.getBody());
+        Assertions
+                .assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+        Assertions
+                .assertThat(students)
+                .isNotEmpty();
+        Assertions
+                .assertThat(students)
+                .anyMatch(s -> "Test Student1".equals(s.getName()));
+        Assertions
+                .assertThat(students)
+                .doesNotContain(student2);
+
+        studentController.deleteStudent(student1.getId());
+        studentController.deleteStudent(student2.getId());
+    }
+
+    @Test
+    void shouldReturnFacultyByStudentId() {
+        Students student = new Students();
+        student.setAge(123);
+        student.setName("Test Student");
+        student.setFaculty(facultyService.findFaculty("leaf").get(0));
+        Students savedStudent = studentRepository.save(student);
+
+        ResponseEntity<Faculty> response = restTemplate.getForEntity(
+                baseUrl + "/get-faculty/" + savedStudent.getId(), Faculty.class);
 
         Assertions
                 .assertThat(response.getStatusCode())
@@ -174,32 +279,9 @@ class StudentControllerTest {
                 .assertThat(response.getBody())
                 .isNotNull();
         Assertions
-                .assertThat(!response.getBody().isEmpty()).isTrue();
-    }
+                .assertThat(response.getBody())
+                .isEqualTo((facultyService.findFaculty("leaf").get(0)));
 
-    @Test
-    void shouldDeleteStudent() {
-
-//        Students student = new Students();
-//        student.setAge(123);
-//        student.setName("Test Student");
-//        Students savedStudent = studentRepository.save(student);
-
-//        Long id = savedStudent.getId();
-        long id = 2002L;
-
-        restTemplate.delete(baseUrl + "/" + id);
-
-        Assertions
-                .assertThat(this.restTemplate.getForObject(baseUrl + "/" + id, String.class))
-                .contains("Student is deleted");
-    }
-
-    @Test
-    void getAgeBetween() {
-    }
-
-    @Test
-    void getFacultyByStudentId() {
+        studentController.deleteStudent(savedStudent.getId());
     }
 }
