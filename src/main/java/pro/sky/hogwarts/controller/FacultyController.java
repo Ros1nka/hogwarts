@@ -25,7 +25,7 @@ public class FacultyController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createtedFaculty);
     }
 
-    @PutMapping()
+    @PutMapping
     public ResponseEntity<Faculty> editFaculty(@RequestBody Faculty faculty) {
         return ResponseEntity.ok(facultyService.editFaculty(faculty));
     }
