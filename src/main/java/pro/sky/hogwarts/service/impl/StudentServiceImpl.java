@@ -1,6 +1,5 @@
 package pro.sky.hogwarts.service.impl;
 
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import pro.sky.hogwarts.Exception.StudentNotFoundException;
 import pro.sky.hogwarts.model.Faculty;
@@ -75,6 +74,21 @@ public class StudentServiceImpl implements StudentService {
             throw new StudentNotFoundException("Student with id: " + id + " does not have a faculty");
         }
         return student.getFaculty();
+    }
+
+    @Override
+    public Integer getCountStudents() {
+        return studentRepository.getCountStudents();
+    }
+
+    @Override
+    public Double getAverageAge() {
+        return studentRepository.getAverageAge();
+    }
+
+    @Override
+    public List<Students> getLast5Students() {
+            return studentRepository.getLast5Students();
     }
 
 }
