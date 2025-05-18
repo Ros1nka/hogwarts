@@ -77,7 +77,7 @@ class StudentControllerTest {
                 .assertThat(response.getBody().getId())
                 .isNotNull();
 
-        studentController.deleteStudent(student.getId());
+        studentController.deleteStudent(response.getBody().getId());
     }
 
     @Test
@@ -144,12 +144,14 @@ class StudentControllerTest {
         Students student1 = new Students();
         student1.setAge(123);
         student1.setName("Test Student");
+        Students savedStudent1 = studentRepository.save(student1);
 
         Students student2 = new Students();
         student2.setAge(321);
         student2.setName("Test2 Student");
+        Students savedStudent2 = studentRepository.save(student2);
 
-        studentRepository.saveAll(List.of(student1, student2));
+        studentRepository.saveAll(List.of(savedStudent1, savedStudent2));
 
         ResponseEntity<List> response = restTemplate.getForEntity(
                 baseUrl, List.class);
@@ -164,8 +166,8 @@ class StudentControllerTest {
                 .assertThat(response.getBody()
                         .size() >= 2).isTrue();
 
-        studentController.deleteStudent(student1.getId());
-        studentController.deleteStudent(student2.getId());
+        studentController.deleteStudent(savedStudent1.getId());
+        studentController.deleteStudent(savedStudent2.getId());
     }
 
     @Test
@@ -230,12 +232,12 @@ class StudentControllerTest {
         Students student1 = new Students();
         student1.setAge(123);
         student1.setName("Test Student1");
-        studentRepository.save(student1);
+        Students savedStudent1 = studentRepository.save(student1);
 
         Students student2 = new Students();
         student2.setAge(99);
         student2.setName("Test Student2");
-        studentRepository.save(student2);
+        Students savedStudent2 = studentRepository.save(student2);
 
         int minAge = 100;
         int maxAge = 200;
@@ -255,10 +257,10 @@ class StudentControllerTest {
                 .anyMatch(s -> "Test Student1".equals(s.getName()));
         Assertions
                 .assertThat(students)
-                .doesNotContain(student2);
+                .doesNotContain(savedStudent2);
 
-        studentController.deleteStudent(student1.getId());
-        studentController.deleteStudent(student2.getId());
+        studentController.deleteStudent(savedStudent1.getId());
+        studentController.deleteStudent(savedStudent2.getId());
     }
 
     @Test
