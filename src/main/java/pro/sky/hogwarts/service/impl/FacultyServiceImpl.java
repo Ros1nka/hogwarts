@@ -1,5 +1,8 @@
 package pro.sky.hogwarts.service.impl;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pro.sky.hogwarts.Exception.FacultyNotFoundException;
 import pro.sky.hogwarts.model.Faculty;
@@ -13,6 +16,8 @@ import java.util.List;
 @Service
 public class FacultyServiceImpl implements FacultyService {
 
+    Logger logger = LoggerFactory.getLogger(FacultyServiceImpl.class);
+
     FacultyRepository facultyRepository;
     StudentRepository studentRepository;
 
@@ -23,16 +28,22 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public Faculty createFaculty(Faculty faculty) {
+        logger.info("Was invoked method for create faculty");
+
         return facultyRepository.save(faculty);
     }
 
     @Override
     public Faculty editFaculty(Faculty faculty) {
+        logger.info("Was invoked method for edit faculty");
+
         return facultyRepository.save(faculty);
     }
 
     @Override
     public List<Faculty> getAllFaculties() {
+        logger.info("Was invoked method for get all faculties");
+
         return facultyRepository.findAll();
     }
 
