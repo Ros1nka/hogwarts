@@ -31,28 +31,28 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public Faculty createFaculty(Faculty faculty) {
-        logger.info("Was invoked method for create faculty" );
+        logger.info("Was invoked method for create faculty");
 
         return facultyRepository.save(faculty);
     }
 
     @Override
     public Faculty editFaculty(Faculty faculty) {
-        logger.info("Was invoked method for edit faculty" );
+        logger.info("Was invoked method for edit faculty");
 
         return facultyRepository.save(faculty);
     }
 
     @Override
     public List<Faculty> getAllFaculties() {
-        logger.info("Was invoked method for get all faculties" );
+        logger.info("Was invoked method for get all faculties");
 
         return facultyRepository.findAll();
     }
 
     @Override
     public Faculty getFacultyById(Long id) {
-        return facultyRepository.findById(id).orElseThrow(() -> new FacultyNotFoundException("Faculty with id: " + id + "not found" ));
+        return facultyRepository.findById(id).orElseThrow(() -> new FacultyNotFoundException("Faculty with id: " + id + "not found"));
     }
 
     @Override
@@ -63,7 +63,7 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public void deleteFaculty(Long id) {
         if (!facultyRepository.existsById(id)) {
-            throw new FacultyNotFoundException("Faculty with id: " + id + " not found" );
+            throw new FacultyNotFoundException("Faculty with id: " + id + " not found");
         }
         facultyRepository.deleteById(id);
     }
@@ -71,7 +71,7 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public List<Students> getStudentsByFacultyId(Long id) {
         if (!facultyRepository.existsById(id)) {
-            throw new FacultyNotFoundException("Faculty with id: " + id + "not found" );
+            throw new FacultyNotFoundException("Faculty with id: " + id + "not found");
         }
         return studentRepository.findAllByFacultyId(id);
     }
@@ -82,7 +82,6 @@ public class FacultyServiceImpl implements FacultyService {
                 .stream()
                 .map(Faculty::getName)
                 .max(Comparator.comparingInt(String::length))
-                .orElse("" );
+                .orElse("");
     }
 }
-
