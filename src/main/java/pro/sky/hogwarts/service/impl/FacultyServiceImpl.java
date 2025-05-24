@@ -11,7 +11,10 @@ import pro.sky.hogwarts.repository.FacultyRepository;
 import pro.sky.hogwarts.repository.StudentRepository;
 import pro.sky.hogwarts.service.FacultyService;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
@@ -71,5 +74,14 @@ public class FacultyServiceImpl implements FacultyService {
             throw new FacultyNotFoundException("Faculty with id: " + id + "not found");
         }
         return studentRepository.findAllByFacultyId(id);
+    }
+
+    @Override
+    public String getLongestFacultyName() {
+        return this.getAllFaculties()
+                .stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length))
+                .orElse("");
     }
 }

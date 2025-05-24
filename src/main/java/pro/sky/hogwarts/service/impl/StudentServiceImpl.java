@@ -10,6 +10,7 @@ import pro.sky.hogwarts.repository.StudentRepository;
 import pro.sky.hogwarts.service.StudentService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -120,4 +121,25 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.getLast5Students();
     }
 
+    @Override
+    public List<String> getAllStudentsWithNameStartWithA() {
+
+        return (this.getAllStudents())
+                .stream()
+                .map(Students::getName)
+                .map(String::toUpperCase)
+                .filter(s -> s.startsWith("A"))
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Double getAverageAgeWithStream() {
+
+        return (this.getAllStudents())
+                .stream()
+                .mapToInt(Students::getAge)
+                .average()
+                .orElse(0);
+    }
 }
