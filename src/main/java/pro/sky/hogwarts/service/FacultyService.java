@@ -21,4 +21,8 @@ public interface FacultyService {
     void deleteFaculty(Long id);
 
     List<Students> getStudentsByFacultyId(Long id);
+
+    String getLongestFacultyName();
+
+    int returnValue();
 }
