@@ -33,4 +33,8 @@ public interface StudentService {
     List<String> getAllStudentsWithNameStartWithA();
 
     Double getAverageAgeWithStream();
+
+    void printStudentsParallel();
+
+    void printStudentsSynchronized();
 }

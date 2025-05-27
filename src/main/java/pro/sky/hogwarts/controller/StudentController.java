@@ -67,4 +67,14 @@ public class StudentController {
     public ResponseEntity<Faculty> getFacultyByStudentId(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getFacultyByStudentId(id));
     }
+
+    @GetMapping("/students/print-parallel")
+    public void printParallel() {
+        studentService.printStudentsParallel();
+    }
+
+    @GetMapping("/students/print-synchronized")
+    public void printSynchronized() {
+        studentService.printStudentsSynchronized();
+    }
 }
