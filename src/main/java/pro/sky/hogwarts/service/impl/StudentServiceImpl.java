@@ -142,4 +142,70 @@ public class StudentServiceImpl implements StudentService {
                 .average()
                 .orElse(0);
     }
+
+    @Override
+    public void printStudentsParallel() {
+
+        List<Students> students = this.getAllStudents();
+
+        students.stream()
+                .skip(0)
+                .limit(2)
+                .forEach(this::printName);
+
+        new Thread(() ->
+                students.stream()
+                        .skip(2)
+                        .limit(2)
+                        .forEach(this::printName))
+                .start();
+
+        new Thread(() ->
+                students.stream()
+                        .skip(4)
+                        .limit(2)
+                        .forEach(this::printName))
+                .start();
+    }
+
+    private void printName(Students student) {
+
+        System.out.println(student.getName());
+    }
+
+    @Override
+    public void printStudentsSynchronized() {
+
+        List<Students> students = this.getAllStudents();
+
+        students.stream()
+                .skip(0)
+                .limit(2)
+                .forEach(this::printNameSynchronized);
+
+        new Thread(() ->
+                students.stream()
+                        .skip(2)
+                        .limit(2)
+                        .forEach(this::printNameSynchronized))
+                .start();
+
+        new Thread(() ->
+                students.stream()
+                        .skip(4)
+                        .limit(2)
+                        .forEach(this::printNameSynchronized))
+                .start();
+    }
+
+    private synchronized void printNameSynchronized(Students student) {
+
+        System.out.println(student.getName());
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
