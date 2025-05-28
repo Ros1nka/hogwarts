@@ -148,14 +148,23 @@ public class StudentServiceImpl implements StudentService {
 
         List<Students> students = this.getAllStudents();
 
-        students.stream().skip(0).limit(2).forEach(this::printName);
+        students.stream()
+                .skip(0)
+                .limit(2)
+                .forEach(this::printName);
 
         new Thread(() ->
-                students.stream().skip(2).limit(2).forEach(this::printName))
+                students.stream()
+                        .skip(2)
+                        .limit(2)
+                        .forEach(this::printName))
                 .start();
 
         new Thread(() ->
-                students.stream().skip(4).limit(2).forEach(this::printName))
+                students.stream()
+                        .skip(4)
+                        .limit(2)
+                        .forEach(this::printName))
                 .start();
     }
 
@@ -169,20 +178,34 @@ public class StudentServiceImpl implements StudentService {
 
         List<Students> students = this.getAllStudents();
 
-        students.stream().skip(0).limit(2).forEach(this::printNameSynchronized);
+        students.stream()
+                .skip(0)
+                .limit(2)
+                .forEach(this::printNameSynchronized);
 
         new Thread(() ->
-                students.stream().skip(2).limit(2).forEach(this::printNameSynchronized))
+                students.stream()
+                        .skip(2)
+                        .limit(2)
+                        .forEach(this::printNameSynchronized))
                 .start();
 
         new Thread(() ->
-                students.stream().skip(4).limit(2).forEach(this::printNameSynchronized))
+                students.stream()
+                        .skip(4)
+                        .limit(2)
+                        .forEach(this::printNameSynchronized))
                 .start();
     }
 
     private synchronized void printNameSynchronized(Students student) {
 
         System.out.println(student.getName());
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
